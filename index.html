@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>键盘团队 | Keyboard Team</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4472C4;
+            --primary-dark: #2B5AA0;
+            --primary-light: #6B9BEB;
+            --accent: #00C9A7;
+            --dark: #1a1a2e;
+            --dark-light: #16213e;
+            --text: #e0e0e0;
+            --text-light: #a0a0b0;
+            --white: #ffffff;
+            --gradient-1: linear-gradient(135deg, #4472C4 0%, #00C9A7 100%);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(68, 114, 196, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 10px 50px;
+            background: rgba(26, 26, 46, 0.95);
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(68, 114, 196, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 201, 167, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-logo {
+            width: 180px;
+            height: 180px;
+            border-radius: 30px;
+            margin: 0 auto 40px;
+            box-shadow: var(--shadow);
+            animation: float 3s ease-in-out infinite;
+            border: 3px solid rgba(68, 114, 196, 0.3);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+        }
+
+        .hero .slogan {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            padding: 15px 40px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            display: inline-block;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(68, 114, 196, 0.3); }
+            to { box-shadow: 0 0 40px rgba(68, 114, 196, 0.6); }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--text-light);
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: scrollDown 2s infinite;
+        }
+
+        @keyframes scrollDown {
+            0% { top: 8px; opacity: 1; }
+            100% { top: 32px; opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* 通用section样式 */
+        section {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        /* 关于团队 */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .about-card {
+            background: var(--dark-light);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(68, 114, 196, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .about-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-color: rgba(68, 114, 196, 0.3);
+        }
+
+        .about-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .about-card h3 {
+            font-size: 1.3rem;
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        .about-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* 成员区域 */
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .member-card {
+            background: var(--dark-light);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(68, 114, 196, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .member-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow);
+            border-color: rgba(68, 114, 196, 0.4);
+        }
+
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            position: relative;
+        }
+
+        .member-avatar.leader {
+            background: var(--gradient-1);
+            box-shadow: 0 0 30px rgba(68, 114, 196, 0.4);
+        }
+
+        .member-avatar.tech {
+            background: linear-gradient(135deg, #00C9A7 0%, #4472C4 100%);
+            box-shadow: 0 0 30px rgba(0, 201, 167, 0.3);
+        }
+
+        .member-avatar.member {
+            background: linear-gradient(135deg, #6B9BEB 0%, #4472C4 100%);
+            box-shadow: 0 0 20px rgba(107, 155, 235, 0.2);
+        }
+
+        .member-role {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .role-leader {
+            background: rgba(68, 114, 196, 0.2);
+            color: var(--primary-light);
+            border: 1px solid rgba(68, 114, 196, 0.3);
+        }
+
+        .role-tech {
+            background: rgba(0, 201, 167, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(0, 201, 167, 0.3);
+        }
+
+        .role-member {
+            background: rgba(107, 155, 235, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(107, 155, 235, 0.3);
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .member-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* 愿景区域 */
+        .vision-section {
+            background: var(--dark-light);
+            border-radius: 30px;
+            padding: 80px 60px;
+            text-align: center;
+            border: 1px solid rgba(68, 114, 196, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vision-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(68, 114, 196, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .vision-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .vision-content h3 {
+            font-size: 1.8rem;
+            color: var(--primary-light);
+            margin-bottom: 20px;
+        }
+
+        .vision-content p {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: var(--text);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .slogan-big {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 40px;
+            letter-spacing: 4px;
+        }
+
+        .slogan-words {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .slogan-word {
+            text-align: center;
+        }
+
+        .slogan-word h4 {
+            font-size: 1.3rem;
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+
+        .slogan-word p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* 规则区域 */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .rule-card {
+            background: var(--dark-light);
+            border-radius: 16px;
+            padding: 30px 25px;
+            border: 1px solid rgba(68, 114, 196, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .rule-card:hover {
+            border-color: rgba(68, 114, 196, 0.3);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .rule-card h4 {
+            font-size: 1.1rem;
+            color: var(--primary-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-card h4 .icon {
+            font-size: 1.3rem;
+        }
+
+        .rule-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rule-card li {
+            color: var(--text-light);
+            font-size: 0.88rem;
+            line-height: 1.8;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .rule-card li::before {
+            content: '\203A';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid rgba(68, 114, 196, 0.15);
+            margin-top: 40px;
+        }
+
+        footer .declaration {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        footer .team-name {
+            font-size: 1rem;
+            color: var(--primary-light);
+            margin-bottom: 20px;
+        }
+
+        footer .copyright {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* 键盘粒子动画 */
+        .keyboard-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .key-particle {
+            position: absolute;
+            font-size: 1rem;
+            color: rgba(68, 114, 196, 0.1);
+            animation: fall linear infinite;
+            user-select: none;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .hero .slogan {
+                font-size: 1.3rem;
+                padding: 12px 25px;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .about-grid,
+            .members-grid,
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vision-section {
+                padding: 40px 25px;
+            }
+
+            .slogan-big {
+                font-size: 1.8rem;
+            }
+
+            .slogan-words {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-logo {
+                width: 130px;
+                height: 130px;
+            }
+        }
+
+        /* 滚动动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- 键盘粒子背景 -->
+    <div class="keyboard-particles" id="particles"></div>
+
+    <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="nav-logo">&#9000; 键盘团队</div>
+        <ul class="nav-links">
+            <li><a href="#about">关于</a></li>
+            <li><a href="#members">成员</a></li>
+            <li><a href="#vision">愿景</a></li>
+            <li><a href="#rules">规则</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="images/team_logo.jpg" alt="键盘团队LOGO" class="hero-logo">
+            <h1>键 盘</h1>
+            <p class="subtitle">KEYBOARD TEAM</p>
+            <div class="slogan">"键入未来，盘点精彩！"</div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- 关于团队 -->
+    <section id="about">
+        <div class="section-title fade-in">
+            <h2>关于团队</h2>
+            <p>六个按键，一个键盘，奏响协作的乐章</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-card fade-in">
+                <div class="about-icon">&#128187;</div>
+                <h3>技术象征</h3>
+                <p>键盘是数字时代的核心输入工具，代表着技术、创新和效率。我们以键盘为名，彰显团队的技术基因。</p>
+            </div>
+            <div class="about-card fade-in">
+                <div class="about-icon">&#129309;</div>
+                <h3>协作精神</h3>
+                <p>每个按键独立却相互配合，正如团队成员各司其职又紧密协作。六人同心，其利断金。</p>
+            </div>
+            <div class="about-card fade-in">
+                <div class="about-icon">&#128640;</div>
+                <h3>无限可能</h3>
+                <p>键盘可以输入任何代码、创造任何内容，象征团队的创造力和无限潜力。未来由我们敲击。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队成员 -->
+    <section id="members">
+        <div class="section-title fade-in">
+            <h2>团队成员</h2>
+            <p>六颗按键，各司其职，共铸辉煌</p>
+        </div>
+        <div class="members-grid">
+            <div class="member-card fade-in">
+                <div class="member-avatar leader">邓</div>
+                <span class="member-role role-leader">&#11088; 组长</span>
+                <h3 class="member-name">邓玉娇</h3>
+                <p class="member-desc">统筹协调、任务分配、进度把控、对外沟通</p>
+            </div>
+            <div class="member-card fade-in">
+                <div class="member-avatar tech">庞</div>
+                <span class="member-role role-tech">&#128295; 技术支持</span>
+                <h3 class="member-name">庞璐璐</h3>
+                <p class="member-desc">技术方案设计、工具选型、技术难题攻关</p>
+            </div>
+            <div class="member-card fade-in">
+                <div class="member-avatar member">王</div>
+                <span class="member-role role-member">&#128221; 成员</span>
+                <h3 class="member-name">王小凤</h3>
+                <p class="member-desc">内容创作、文档编写、资料收集</p>
+            </div>
+            <div class="member-card fade-in">
+                <div class="member-avatar member">陈</div>
+                <span class="member-role role-member">&#128202; 成员</span>
+                <h3 class="member-name">陈政</h3>
+                <p class="member-desc">数据分析、逻辑梳理、方案优化</p>
+            </div>
+            <div class="member-card fade-in">
+                <div class="member-avatar member">秦</div>
+                <span class="member-role role-member">&#127912; 成员</span>
+                <h3 class="member-name">秦玲岭</h3>
+                <p class="member-desc">视觉设计、演示制作、成果展示</p>
+            </div>
+            <div class="member-card fade-in">
+                <div class="member-avatar member">肖</div>
+                <span class="member-role role-member">&#9989; 成员</span>
+                <h3 class="member-name">肖靖枫</h3>
+                <p class="member-desc">测试验证、质量把控、细节完善</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队愿景 -->
+    <section id="vision">
+        <div class="section-title fade-in">
+            <h2>愿景与口号</h2>
+            <p>我们的目标，我们的信念</p>
+        </div>
+        <div class="vision-section fade-in">
+            <div class="vision-content">
+                <h3>&#127919; 团队愿景</h3>
+                <p>成为最具创造力和执行力的技术团队，用键盘敲击出无限可能，用协作创造卓越成果。</p>
+                <div class="slogan-big">"键入未来，盘点精彩！"</div>
+                <div class="slogan-words">
+                    <div class="slogan-word">
+                        <h4>键入</h4>
+                        <p>行动力</p>
+                    </div>
+                    <div class="slogan-word">
+                        <h4>未来</h4>
+                        <p>前瞻性</p>
+                    </div>
+                    <div class="slogan-word">
+                        <h4>盘点</h4>
+                        <p>反思精神</p>
+                    </div>
+                    <div class="slogan-word">
+                        <h4>精彩</h4>
+                        <p>卓越品质</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 内部管理规则 -->
+    <section id="rules">
+        <div class="section-title fade-in">
+            <h2>内部管理规则</h2>
+            <p>高效协作的制度保障</p>
+        </div>
+        <div class="rules-grid">
+            <div class="rule-card fade-in">
+                <h4><span class="icon">&#128172;</span> 沟通机制</h4>
+                <ul>
+                    <li>使用微信群进行即时沟通</li>
+                    <li>每周一次例会，时长不超过1小时</li>
+                    <li>文档统一存放，命名规范：日期_内容_版本</li>
+                </ul>
+            </div>
+            <div class="rule-card fade-in">
+                <h4><span class="icon">&#128203;</span> 任务分配</h4>
+                <ul>
+                    <li>组长负责分解任务，考虑成员特长</li>
+                    <li>每项任务明确负责人、协助人、截止日期</li>
+                    <li>完成后需提交成果并简要汇报</li>
+                </ul>
+            </div>
+            <div class="rule-card fade-in">
+                <h4><span class="icon">&#128202;</span> 进度管理</h4>
+                <ul>
+                    <li>看板式管理：待办、进行中、待审核、已完成</li>
+                    <li>每周更新进度</li>
+                    <li>延期需提前说明原因和调整方案</li>
+                </ul>
+            </div>
+            <div class="rule-card fade-in">
+                <h4><span class="icon">&#10024;</span> 质量要求</h4>
+                <ul>
+                    <li>交付成果需经过其他成员审核</li>
+                    <li>技术方案需双重确认</li>
+                    <li>演示材料需全组预览</li>
+                </ul>
+            </div>
+            <div class="rule-card fade-in">
+                <h4><span class="icon">&#9878;</span> 冲突解决</h4>
+                <ul>
+                    <li>意见分歧优先通过讨论达成共识</li>
+                    <li>无法一致时由组长综合决策</li>
+                    <li>鼓励建设性批评，禁止人身攻击</li>
+                </ul>
+            </div>
+            <div class="rule-card fade-in">
+                <h4><span class="icon">&#129309;</span> 团队承诺</h4>
+                <ul>
+                    <li>按时参加团队活动和会议</li>
+                    <li>积极完成任务，困难及时求助</li>
+                    <li>尊重每位成员的意见和贡献</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p class="declaration">我们是"键盘"团队，六颗按键，一个键盘，敲击出属于我们的精彩篇章！</p>
+        <p class="team-name">&#9000; 键盘团队 | Keyboard Team</p>
+        <p class="copyright">&copy; 2026 键盘团队. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // 键盘粒子效果
+        var keys = ['Enter', 'Ctrl', 'Alt', 'Shift', 'Tab', 'Esc', 'Space', 'A', 'S', 'D', 'F', 'Q', 'W', 'E', 'R', 'Z', 'X', 'C', 'V'];
+        var particlesContainer = document.getElementById('particles');
+
+        function createParticle() {
+            var particle = document.createElement('span');
+            particle.className = 'key-particle';
+            particle.textContent = keys[Math.floor(Math.random() * keys.length)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+            particle.style.fontSize = (Math.random() * 14 + 10) + 'px';
+            particlesContainer.appendChild(particle);
+
+            setTimeout(function() {
+                particle.remove();
+            }, 18000);
+        }
+
+        setInterval(createParticle, 800);
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            var navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 滚动动画
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(function(el) {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
